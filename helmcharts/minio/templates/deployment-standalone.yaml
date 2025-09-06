@@ -17,7 +17,7 @@ spec:
       {{- if or .Values.podAnnotations (include "minio.createSecret" .) }}
       annotations:
         {{- if (include "minio.createSecret" .) }}
-        checksum/credentials-secret: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        checksum/credentials-secret: {{ printf "%s%s" (include "minio.accessKey" .) (include "minio.secretKey" .) | sha256sum }}
         {{- end }}
         {{- if .Values.podAnnotations }}
         {{- include "minio.tplValue" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}

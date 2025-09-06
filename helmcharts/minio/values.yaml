@@ -4,8 +4,8 @@
 ##
 global:
  minio: {}
-#  accessKey: "minios3AccessKeyS3cr3t"
-#  secretKey: "m1n10s3CretK3yPassw0rd"
+ accessKey: "minios3AccessKeyS3cr3t"
+ secretKey: "m1n10s3CretK3yPassw0rd"
 #  minio: {}
 #    existingSecret: ""
 #    accessKey: ""

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   clickhouse:
-    image: clickhouse/clickhouse-server:23.8.2.7-alpine
+    image: clickhouse/clickhouse-server:24.3.3.102-alpine
     container_name: mida-clickhouse
     hostname: clickhouse
     restart: unless-stopped

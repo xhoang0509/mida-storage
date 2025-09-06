@@ -9,7 +9,6 @@ services:
     ports:
       - "30900:8123"    # HTTP interface (web UI)
       - "30123:9000"    # Native TCP interface
-      - "7171:7171"     # Backup API
     environment:
       CLICKHOUSE_DB: default
       CLICKHOUSE_USER: root
@@ -31,36 +30,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-
-  clickhouse-backup:
-    image: alexakulov/clickhouse-backup:latest
-    container_name: mida-clickhouse-backup
-    restart: unless-stopped
-    ports:
-      - "7171:7171"
-    environment:
-      API_LISTEN: "0.0.0.0:7171"
-      BACKUPS_TO_KEEP_LOCAL: "1"
-      CLICKHOUSE_HOST: "clickhouse"
-      CLICKHOUSE_PORT: "9000"
-      CLICKHOUSE_USERNAME: "root"
-      CLICKHOUSE_PASSWORD: "hoangnx1"
-      # Uncomment and configure for S3 backup
-      # REMOTE_STORAGE: "s3"
-      # S3_ACCESS_KEY: "your-access-key"
-      # S3_SECRET_KEY: "your-secret-key"
-      # S3_ENDPOINT: "http://minio:9000"
-      # S3_BUCKET: "clickhouse-backups"
-      # S3_PATH: "backup"
-      # S3_FORCE_PATH_STYLE: "true"
-      # S3_DISABLE_SSL: "true"
-    volumes:
-      - clickhouse_backup:/backup
-    networks:
-      - mida-storage
-    depends_on:
-      clickhouse:
-        condition: service_healthy
 
   minio:
     image: bitnami/minio:2023.2.10-debian-11-r1
@@ -96,8 +65,6 @@ volumes:
   clickhouse_data:
     driver: local
   clickhouse_logs:
-    driver: local
-  clickhouse_backup:
     driver: local
   minio_data:
     driver: local

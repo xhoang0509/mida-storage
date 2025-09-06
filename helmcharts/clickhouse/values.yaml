@@ -1,0 +1,141 @@
+# Default values for clickhouse.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: clickhouse/clickhouse-server
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "23.8.2.7-alpine"
+
+backupImage:
+  repository: alexakulov/clickhouse-backup
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+username: root
+password: "hoangnx1"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+env: {}
+backupEnv:
+  API_LISTEN: "0.0.0.0:7171"
+  BACKUPS_TO_KEEP_LOCAL: "1"
+  CLICKHOUSE_HOST: "localhost"
+  CLICKHOUSE_PORT: "9000"
+# REMOTE_STORAGE=s3
+# S3_ACCESS_KEY=key
+# S3_SECRET_KEY=password
+# LOG_LEVEL=debug
+# ALLOW_EMPTY_BACKUPS="true"
+# API_LISTEN=0.0.0.0:7171
+# API_CREATE_INTEGRATION_TABLES="true"
+# BACKUPS_TO_KEEP_REMOTE="3"
+# S3_ACL=private
+# S3_ENDPOINT=http://minio.db.svc.cluster.local:9000
+# S3_BUCKET=clickhouse
+# S3_PATH=backup
+# S3_FORCE_PATH_STYLE="true"
+# S3_DISABLE_SSL="true"
+# S3_DEBUG="true"
+
+
+service:
+  type: NodePort
+  webPort: 9000
+  webNodePort: 30900
+  dataPort: 8123
+  dataNodePort: 30123
+
+# Không giới hạn resource theo yêu cầu
+resources:
+  requests: {}
+  limits: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+storageSize: 100Gi
+
+configOverride:
+  serverConfig:
+    00-server-override.xml: |-
+      <clickhouse>
+        <logger>
+            <level>information</level>
+            <console>true</console>
+        <log remove="remove"></log>
+        <errorlog remove="remove"></errorlog>
+        </logger>
+        <listen_host>0.0.0.0</listen_host>
+        <keep_alive_timeout>100</keep_alive_timeout>
+      </clickhouse>
+    # another-config.xml: |-
+    #   <clickhouse>
+        # <concurrent_threads_soft_limit_num>64</concurrent_threads_soft_limit_num>
+        # <concurrent_threads_soft_limit_ratio_to_cores>2</concurrent_threads_soft_limit_ratio_to_cores>
+        # <concurrent_threads_scheduler>fair_round_robin</concurrent_threads_scheduler>
+        # <max_server_memory_usage>102400000000</max_server_memory_usage>
+        # <max_thread_pool_size>10000</max_thread_pool_size>
+        # <max_server_memory_usage_to_ram_ratio>0.8</max_server_memory_usage_to_ram_ratio>
+        # <uncompressed_cache_size remove="remove"></uncompressed_cache_size>
+        # <mmap_cache_size>26214</mmap_cache_size>
+    #   </clickhouse>
+  userConfig:
+    00-user-override.xml: |-
+      <clickhouse>
+        <profiles>
+          <default>
+              <allow_experimental_json_type>1</allow_experimental_json_type>
+              <use_query_cache>0</use_query_cache>
+              <query_cache_min_query_duration>5000</query_cache_min_query_duration>
+              <query_cache_ttl>900</query_cache_ttl>
+              <query_cache_nondeterministic_function_handling>ignore</query_cache_nondeterministic_function_handling>
+              <query_cache_system_table_handling>ignore</query_cache_system_table_handling>
+              <max_memory_usage_for_user>0</max_memory_usage_for_user>
+              <max_memory_usage>0</max_memory_usage>
+              <result_overflow_mode>throw</result_overflow_mode>
+              <group_by_overflow_mode>throw</group_by_overflow_mode>
+              <readonly>0</readonly>
+          </default>
+        </profiles>
+        <users>
+          <default>
+            <profile>default</profile>
+          </default>
+          <root>
+            <profile>default</profile>
+            <password>hoangnx1</password>
+            <access_management>1</access_management>
+          </root>
+        </users>
+      </clickhouse>

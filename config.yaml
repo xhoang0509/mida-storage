@@ -1,0 +1,21 @@
+# Mida Storage Configuration
+# Configuration file for ClickHouse and MinIO deployment
+
+clickhouse:
+  username: root
+  password: hoangnx1
+  host: localhost
+  port: 30900
+  dataPort: 30123
+
+minio:
+  accessKey: minio-admin
+  secretKey: minio-secret-key-2024
+  host: localhost
+  port: 30000
+  bucket: midareplay-storage
+
+kubernetes:
+  namespace: mida-storage
+  releaseNameClickhouse: clickhouse
+  releaseNameMinio: minio

@@ -1,0 +1,27 @@
+<clickhouse>
+    <profiles>
+        <default>
+            <allow_experimental_json_type>1</allow_experimental_json_type>
+            <use_query_cache>0</use_query_cache>
+            <query_cache_min_query_duration>5000</query_cache_min_query_duration>
+            <query_cache_ttl>900</query_cache_ttl>
+            <query_cache_nondeterministic_function_handling>ignore</query_cache_nondeterministic_function_handling>
+            <query_cache_system_table_handling>ignore</query_cache_system_table_handling>
+            <max_memory_usage_for_user>0</max_memory_usage_for_user>
+            <max_memory_usage>0</max_memory_usage>
+            <result_overflow_mode>throw</result_overflow_mode>
+            <group_by_overflow_mode>throw</group_by_overflow_mode>
+            <readonly>0</readonly>
+        </default>
+    </profiles>
+    <users>
+        <default>
+            <profile>default</profile>
+        </default>
+        <root>
+            <profile>default</profile>
+            <password>hoangnx1</password>
+            <access_management>1</access_management>
+        </root>
+    </users>
+</clickhouse>
